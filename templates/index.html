@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Amazon Review Sentiment Analyzer</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+  <style>
+    /* Optional: Make messages prettier */
+    #loading-message {
+      margin-top: 16px;
+      font-size: 1.1rem;
+      color: #333046;
+      text-align: center;
+      animation: fadeIn 0.5s ease;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Navbar -->
+  <nav class="navbar">
+    <div class="nav-left">
+      <div class="logo">🔍True Review</div>
+    </div>
+    <div class="nav-right">
+      <a href="/" class="nav-link">🏠Home</a>
+    </div>
+  </nav>
+  
+  <!-- Main Container -->
+  <div class="container">
+    <div class="card">
+      <h1>Analyze Amazon Product Reviews</h1>
+      <p>Enter a product URL to begin analysis</p>
+      <form id="analyze-form">
+        <input type="text" id="url-input" placeholder="Paste Amazon product URL here" required>
+        <button type="submit">Analyze</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Loading overlay -->
+  <div id="loading-overlay" class="loading-overlay" style="display: none;">
+    <div class="loader-circle"></div>
+    <div id="loading-message">🔍 Analyzing reviews...</div>
+  </div>
+
+  <!-- JavaScript -->
+  <script>
+    const form = document.getElementById("analyze-form");
+    const overlay = document.getElementById("loading-overlay");
+    const loadingMessage = document.getElementById("loading-message");
+
+    const messages = [
+      "🔍 Analyzing reviews...",
+      "🧠 Thinking really hard...",
+      "📚 Reading all the reviews...",
+      "🤖 Summoning AI powers...",
+      "😎 Filtering fake ones...",
+      "✨ Polishing the results...",
+      "📊 Building graphs...",
+      "📝 Writing the summary...",
+      "🎯 Scoring sentiments..."
+    ];
+
+    let messageIndex = 0;
+    let messageInterval;
+
+    form.addEventListener("submit", async function(e) {
+      e.preventDefault();
+      overlay.style.display = "flex";
+      loadingMessage.textContent = messages[0];
+
+      // Start changing messages
+      messageInterval = setInterval(() => {
+        messageIndex = (messageIndex + 1) % messages.length;
+        loadingMessage.textContent = messages[messageIndex];
+      }, 2500);
+
+      const url = document.getElementById("url-input").value;
+      try {
+        const response = await fetch("/analyze", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ url: url })
+        });
+
+        await response.json();
+        clearInterval(messageInterval);
+        overlay.style.display = "none";
+        window.location.href = "/dashboard/";
+
+      } catch (error) {
+        clearInterval(messageInterval);
+        overlay.style.display = "none";
+        alert("Error analyzing reviews. Please try again.");
+        console.error(error);
+      }
+    });
+  </script>
+
+</body>
+</html>

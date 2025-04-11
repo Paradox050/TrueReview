@@ -1,0 +1,68 @@
+<!-- templates/logout.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Logged Out</title>
+  <style>
+    body, html {
+      margin: 0;
+      padding: 0;
+      font-family: 'Poppins', sans-serif;
+      height: 100vh;
+      background: linear-gradient(135deg, #fbc2eb, #a6c1ee, #c2e9fb);
+      background-size: 400% 400%;
+      animation: gradientFlow 20s ease infinite;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      color: #333046;
+    }
+
+    @keyframes gradientFlow {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+
+    .container {
+      text-align: center;
+      background-color: rgba(255, 255, 255, 0.2);
+      padding: 40px;
+      border-radius: 16px;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+      backdrop-filter: blur(10px);
+    }
+
+    h2 {
+      font-size: 2rem;
+      margin-bottom: 20px;
+      color: #333046;
+    }
+
+    a {
+      display: inline-block;
+      margin-top: 10px;
+      padding: 12px 24px;
+      text-decoration: none;
+      font-weight: 600;
+      background: linear-gradient(135deg, #a18cd1, #fbc2eb);
+      color: white;
+      border-radius: 10px;
+      box-shadow: 0 0 12px rgba(0,0,0,0.1);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    a:hover {
+      transform: scale(1.05);
+      box-shadow: 0 0 20px rgba(0,0,0,0.2);
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>You have been logged out</h2>
+    <a href="/">Return to Home</a>
+  </div>
+</body>
+</html>

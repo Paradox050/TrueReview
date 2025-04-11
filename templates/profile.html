@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Profile - True Review</title>
+    <link rel="stylesheet" href="/static/css/profile.css">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-left">
+            <a href="/" class="nav-link">🏠 Home</a>
+        </div>
+        <div class="nav-right">
+          <a href="/logout" class="nav-link logout-link">🚪 Logout</a>
+        </div>
+      </nav>
+      
+    <div class="profile-container">
+        <div class="user-card">
+            <h2>👋 Welcome, {{ user.name }}</h2>
+            <p>Email: {{ user.email }}</p>
+        </div>
+
+        <h3 class="section-title">📂 Saved Dashboards</h3>
+        <div id="pdf-list" class="pdf-grid"></div>
+    </div>
+
+    <script>
+        async function loadPDFs() {
+            const res = await fetch('/get-user-pdfs');
+            const data = await res.json();
+            const container = document.getElementById('pdf-list');
+            container.innerHTML = '';
+
+            if (data.pdfs.length === 0) {
+                container.innerHTML = '<p>No saved dashboards yet.</p>';
+                return;
+            }
+
+            data.pdfs.forEach(pdf => {
+                const card = document.createElement('div');
+                card.className = 'pdf-card';
+                card.innerHTML = `
+                    <h4>${pdf.filename}</h4>
+                    <div class="pdf-actions">
+                        <a href="/download-pdf/${pdf._id}" class="btn">⬇️ Download</a>
+                        <button class="btn delete-btn" onclick="deletePDF('${pdf._id}')">🗑️ Delete</button>
+                    </div>
+                `;
+                container.appendChild(card);
+            });
+        }
+
+        async function deletePDF(id) {
+            await fetch('/delete-pdf/' + id, { method: 'POST' });
+            loadPDFs();
+        }
+
+        loadPDFs();
+    </script>
+</body>
+</html>

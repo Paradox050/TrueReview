@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>True Review</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/home.css') }}" />
+</head>
+<body>
+  <!-- Navbar -->
+  <div class="navbar">
+    <div class="logo">🔍True Review</div>
+    <div class="profile-container">
+      <div class="profile-icon" onclick="toggleDropdown()">👤</div>
+      <div class="dropdown" id="profileDropdown">
+        <!-- Will be filled dynamically -->
+      </div>
+    </div>
+  </div>
+
+  <!-- Main Container -->
+  <div class="container">
+    <h1 class="title">Uncover the Truth Behind Reviews</h1>
+    <p class="tagline">Reveal honest insights from Amazon product reviews.</p>
+    <button class="btn-analyze" onclick="startAnalysis()">Start Analyzing</button>
+  </div>
+
+  <script>
+    // Toggle dropdown
+    function toggleDropdown() {
+      const dropdown = document.getElementById('profileDropdown');
+      dropdown.style.display = dropdown.style.display === 'block' ? 'none' : 'block';
+    }
+
+    // Close dropdown when clicking outside
+    window.addEventListener('click', function(event) {
+      const dropdown = document.getElementById('profileDropdown');
+      if (!event.target.closest('.profile-container')) {
+        dropdown.style.display = 'none';
+      }
+    });
+
+    // Load dropdown items dynamically
+    fetch("/check-login")
+      .then(res => res.json())
+      .then(data => {
+        const dropdown = document.getElementById('profileDropdown');
+        if (data.loggedIn) {
+          dropdown.innerHTML = `
+            <a href="/profile">Profile</a>
+            <a href="/logout">Logout</a>
+          `;
+        } else {
+          dropdown.innerHTML = `
+            <a href="/login">Login</a>
+            <a href="/signup">Signup</a>
+          `;
+        }
+      });
+
+    function startAnalysis() {
+      fetch("/check-login")
+        .then(res => res.json())
+        .then(data => {
+          if (data.loggedIn) {
+            window.location.href = "/index";
+          } else {
+            window.location.href = "/login";
+          }
+        });
+    }
+  </script>
+</body>
+</html>
